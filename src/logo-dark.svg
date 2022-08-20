@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 60 60" style="enable-background:new 0 0 60 60;" xml:space="preserve">
+	<path style="fill-rule:evenodd;fill:#b3b3b3" d="m3.4355 52.366c23.54 2.799 58.912 10.815 52.55-1.782s5.726-46.57 0.636-46.316c-5.089 0.255-50.896-2.5444-51.66 2.6725-0.763 5.2165-1.5265 45.426-1.5265 45.426z" transform="translate(-.38172 -.12724)"/>
+	<path style="fill-rule:evenodd;fill:#7f7f7f" d="m2.9265 40.532c14.506-11.452 51.024-13.106 51.024-13.106l1.527-5.853s-0.127-0.636-5.344-0.89c-11.197 0-16.16 8.779-28.629 8.779-12.47 0-18.323 2.672-18.323 2.672l-0.2545 8.398z" transform="translate(0 .50896)"/>
+	<path style="stroke-linejoin:round;stroke:#333333;stroke-linecap:round;stroke-dasharray:2.5000000,2.5000000;stroke-width:2.5;fill:none" d="m12.342 12.157c6.362 26.721 27.993 0.255 33.592 0.382 7.38 4.963-27.484 18.323-28.756 25.576-1.273 7.252 20.231 3.944 20.231 3.944" transform="translate(0 1.1452)"/>
+	<path style="fill-rule:evenodd;stroke:#333333;stroke-width:1.875;fill:#4c4c4c" d="m14.76 11.839a2.6084 2.6084 0 1 0 -5.2169 0 2.6084 2.6084 0 1 0 5.2169 0z" transform="translate(0 1.1452)"/>
+	<path style="stroke-linejoin:round;stroke:#333333;stroke-linecap:round;stroke-width:3.125;fill:none" d="m3.4355 52.366c23.54 2.799 58.912 10.815 52.55-1.782s5.726-46.57 0.636-46.316c-5.089 0.255-50.896-2.5444-51.66 2.6725-0.763 5.2165-1.5265 45.426-1.5265 45.426z" transform="translate(-.38172 -.12724)"/>
+	<g id="x" transform="translate(0 1.1452)">
+		<path style="stroke-width:1pt;fill:#333333" d="m11.456 15.245c2.141 0.239 4.063 2.457 5.459 3.885 0.883 0.951 1.714 1.931 2.502 2.962l-1.792 0.505c-0.741-1.001-1.535-1.937-2.393-2.84-0.927-0.914-1.889-1.795-2.991-2.497-0.393-0.251-1.058-0.583-0.785-0.556v-1.459z" transform="matrix(1.9338 0 0 1.9338 9.4173 6.6365)"/>
+		<path style="stroke-width:1pt;fill:#333333" d="m10.95 21.864c1.349-1.986 3.04-3.814 4.579-5.651 0.512-0.602 1.028-1.199 1.55-1.791l1.724 0.583c-0.533 0.574-1.054 1.156-1.57 1.746-1.02 1.204-2.024 2.427-2.928 3.722-0.403 0.577-1.545 2.343-1.075 1.818l-2.28-0.427z" transform="matrix(1.9338 0 0 1.9338 9.4173 6.6365)"/>
+	</g>
+</svg>
