@@ -24,3 +24,4 @@ The project is licensed under the MIT License. See [LICENSE](LICENSE) for detail
 ## Resources
 - Geohashing (xkcd): https://xkcd.com/426/
 - Geohashing (wiki): https://explainxkcd.com/wiki/index.php/426:_Geohashing
+- react-leaflet (GitHub): https://github.com/PaulLeCam/react-leaflet

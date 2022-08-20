@@ -50,7 +50,6 @@ export const convertBaseBigInt = (() => {
 
 export const base16ToBase10 = (base16: Base16): Base10 => convertBaseBigInt(base16, 16, 10)
 
-
 const intPart = (val: number) => {
   return val > 0 ? Math.floor(val) : Math.ceil(val)
 }
@@ -62,11 +61,11 @@ export const geohash = (blockHash: Base16, position: LatLng) => {
 
   const latIntPart = intPart(position[0])
   const latFractPart = base16ToBase10(latHashFractPart).substring(0, 6)
-  const lat = +(`${latIntPart}.${latFractPart}`)
-  
+  const lat = +`${latIntPart}.${latFractPart}`
+
   const lngIntPart = intPart(position[1])
   const lngFractPart = base16ToBase10(lngHashFractPart).substring(0, 6)
 
-  const lng = +(`${lngIntPart}.${lngFractPart}`)
+  const lng = +`${lngIntPart}.${lngFractPart}`
   return [lat, lng]
 }

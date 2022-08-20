@@ -29,6 +29,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.7.11",
     "prettier": "^2.7.1"
   },
   "eslintConfig": {

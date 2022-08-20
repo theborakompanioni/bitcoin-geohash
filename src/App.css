@@ -34,3 +34,9 @@ hr {
 .App-link {
   color: #61dafb;
 }
+
+/* Leaflet adaptions */
+.leaflet-control-attribution a:first-child svg {
+  display: none !important;
+}
+/* Leaflet adaptions - end */
