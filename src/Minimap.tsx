@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { MapContainer, Rectangle, TileLayer, useMap, useMapEvent } from 'react-leaflet'
-import { LeafletMouseEvent, Map } from 'leaflet'
+import { LeafletMouseEvent, Map, ControlPosition } from 'leaflet'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
-const POSITION_CLASSES = {
+const POSITION_CLASSES: { [key in ControlPosition]: string} = {
   bottomleft: 'leaflet-bottom leaflet-left',
   bottomright: 'leaflet-bottom leaflet-right',
   topleft: 'leaflet-top leaflet-left',
   topright: 'leaflet-top leaflet-right',
 }
-type PositionInContainer = 'bottomleft' | 'bottomright' | 'topleft' | 'topright'
 
 const BOUNDS_STYLE = { weight: 1 }
 
@@ -49,7 +48,7 @@ export function MinimapControl({
   zoom,
 }: {
   parentMap: Map
-  position: PositionInContainer
+  position: ControlPosition
   zoom?: number
 }) {
   const mapZoom = useMemo(() => zoom || 0, [zoom])

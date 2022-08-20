@@ -1,14 +1,15 @@
 import React from 'react'
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, Marker, Popup, ScaleControl, TileLayer, useMap, ZoomControl } from 'react-leaflet'
 import { MinimapControl } from './Minimap'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
+import { ControlPosition } from 'leaflet'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
-function Minimap() {
+function Minimap({ position }: { position: ControlPosition}) {
   const map = useMap()
-  return <MinimapControl parentMap={map} position="bottomleft" zoom={1} />
+  return <MinimapControl parentMap={map} position={position} zoom={1} />
 }
 
 function App() {
@@ -31,14 +32,17 @@ function App() {
             style={{ width: '100%', height: '100%' }}
             center={[30.375115, -97.687444]}
             zoom={8}
-            scrollWheelZoom={false}
+            scrollWheelZoom={true}
+            zoomControl={false}
           >
+            <ZoomControl position="bottomleft" />
+            <Minimap position="bottomright"/>
+            <ScaleControl position="topleft" />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url={TILE_URL}
             />
             {marker}
-            <Minimap />
           </MapContainer>
         </div>
 
