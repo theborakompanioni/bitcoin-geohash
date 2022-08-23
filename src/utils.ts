@@ -1,8 +1,12 @@
-import * as BlockstreamInfoApi from "./api/blockstream-info"
+import * as BlockstreamInfoApi from './api/blockstream-info'
 
 export type Base10 = string
 export type Base16 = string
 export type LatLng = [number, number]
+
+export const throwError = (reason: string): Promise<never> => {
+  throw new Error(reason)
+}
 
 const bigIntPow = (() => {
   const ZERO = BigInt(0)

@@ -4,7 +4,7 @@ import { MinimapControl } from './Minimap'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
 import { ControlPosition, LatLngExpression } from 'leaflet'
-import { fetchBlockHashByHeight, geohash, LatLng } from './utils'
+import { fetchBlockHashByHeight, geohash, LatLng, throwError } from './utils'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
@@ -26,23 +26,26 @@ function App() {
   )
 
   const [loading, setLoading] = useState(true)
+  const [blockHeight, setBlockHeight] = useState(0)
   const [blockHash, setBlockHash] = useState<string | null>(null)
   const [geohashPosition, setGeohashPosition] = useState<LatLng | null>(null)
 
   useEffect(() => {
     const abortCtrl = new AbortController()
-    fetchBlockHashByHeight(0, { signal: abortCtrl.signal })
-      .then(async (res) => {
-        if (res.ok) {
-          setBlockHash(await res.text())
-        }
+    fetchBlockHashByHeight(blockHeight, { signal: abortCtrl.signal })
+      .then((val) => new Promise<Response>((resolve) => setTimeout(() => resolve(val), 1_000)))
+      .then((res) => (res.ok ? res.text() : throwError('')))
+      .then((hash) => {
+        if (abortCtrl.signal.aborted) return
+        setBlockHash(hash)
       })
+      .catch((e) => console.log(e))
       .finally(() => setLoading(false))
 
     return () => {
       abortCtrl.abort()
     }
-  }, [])
+  }, [blockHeight])
 
   useEffect(() => {
     if (!blockHash) return

@@ -1,4 +1,3 @@
-
 const baseUrl = 'https://blockstream.info/api'
 
 export const blockHeight = async (blockHeight: number, { signal }: { signal?: AbortSignal } = {}) => {
