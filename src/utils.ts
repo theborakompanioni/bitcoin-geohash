@@ -1,3 +1,5 @@
+import * as BlockstreamInfoApi from "./api/blockstream-info"
+
 export type Base10 = string
 export type Base16 = string
 export type LatLng = [number, number]
@@ -54,7 +56,7 @@ const intPart = (val: number) => {
   return val > 0 ? Math.floor(val) : Math.ceil(val)
 }
 
-export const geohash = (blockHash: Base16, position: LatLng) => {
+export const geohash = (blockHash: Base16, position: LatLng): LatLng => {
   const hashBase = blockHash.substring(32, 64)
   const latHashFractPart = hashBase.substring(0, 16)
   const lngHashFractPart = hashBase.substring(16, 32)
@@ -68,4 +70,8 @@ export const geohash = (blockHash: Base16, position: LatLng) => {
 
   const lng = +`${lngIntPart}.${lngFractPart}`
   return [lat, lng]
+}
+
+export const fetchBlockHashByHeight = async (blockHeight: number, options?: { signal?: AbortSignal }) => {
+  return BlockstreamInfoApi.blockHeight(blockHeight, options)
 }

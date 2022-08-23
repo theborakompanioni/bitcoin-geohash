@@ -39,4 +39,8 @@ hr {
 .leaflet-control-attribution a:first-child svg {
   display: none !important;
 }
+
+.leaflet-popup-content {
+  word-break: break-all !important;
+}
 /* Leaflet adaptions - end */

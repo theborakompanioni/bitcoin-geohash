@@ -4,7 +4,7 @@ import { LeafletMouseEvent, Map, ControlPosition } from 'leaflet'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
-const POSITION_CLASSES: { [key in ControlPosition]: string} = {
+const POSITION_CLASSES: { [key in ControlPosition]: string } = {
   bottomleft: 'leaflet-bottom leaflet-left',
   bottomright: 'leaflet-bottom leaflet-right',
   topleft: 'leaflet-top leaflet-left',
