@@ -79,3 +79,7 @@ export const geohash = (blockHash: Base16, position: LatLng): LatLng => {
 export const fetchBlockHashByHeight = async (blockHeight: number, options?: { signal?: AbortSignal }) => {
   return BlockstreamInfoApi.blockHeight(blockHeight, options)
 }
+
+export const fetchBlockTipHeight = async (options?: { signal?: AbortSignal }) => {
+  return BlockstreamInfoApi.blocksTipHeight(options)
+}
