@@ -3,16 +3,18 @@ import { MapContainer, Marker, Popup, ScaleControl, TileLayer, useMap, ZoomContr
 import { MinimapControl } from './Minimap'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-import { ControlPosition, LatLngExpression } from 'leaflet'
-import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, throwError } from './utils'
+import { ControlPosition, LatLngExpression, LatLngTuple } from 'leaflet'
+import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwError } from './utils'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+
+const DEFAULT_LOCATION: LatLng = [30.375115, -97.687444]
 
 const BLOCKS_PER_DAY = 6 * 24
 const BLOCKS_PER_WEEK = BLOCKS_PER_DAY * 7
 
 const BLOCKHEIGHT_TO_HASH_MAP: { [key: number]: string } = {
-  0: '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'
+  0: '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
 }
 
 function Minimap({ position }: { position: ControlPosition }) {
@@ -21,16 +23,52 @@ function Minimap({ position }: { position: ControlPosition }) {
 }
 
 function App() {
-  const myPosition: LatLngExpression = useMemo(() => [30.375115, -97.687444], [])
+  const [browserCurrentPosition, setBrowserCurrentPosition] = useState<LatLng | undefined>(undefined)
+  const [browserCurrentPositionError, setBrowserCurrentPositionError] = useState<GeolocationPositionError | undefined>(
+    undefined
+  )
+  const [myPosition, setMyPosition] = useState<LatLng | undefined>(undefined)
 
-  const myPositionMarker = useMemo(
-    () => (
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.debug(position)
+          setBrowserCurrentPosition([position.coords.latitude, position.coords.longitude] as LatLng)
+          setBrowserCurrentPositionError(undefined)
+        },
+        (e) => {
+          setBrowserCurrentPosition(undefined)
+          setBrowserCurrentPositionError(e)
+
+          const msg = [
+            "User did not allow sharing his location. That's totally fine!",
+            'Watch your privacy man! You can input it manually.',
+          ].join('\n')
+          console.debug(msg)
+        }
+      )
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log('aaaa')
+    if (browserCurrentPosition) {
+      setMyPosition(browserCurrentPosition)
+    } else if (browserCurrentPositionError) {
+      setMyPosition(DEFAULT_LOCATION)
+    }
+  }, [browserCurrentPosition, browserCurrentPositionError])
+
+  const myPositionMarker = useMemo(() => {
+    if (!myPosition) return
+
+    return (
       <Marker position={myPosition}>
         <Popup>You</Popup>
       </Marker>
-    ),
-    [myPosition]
-  )
+    )
+  }, [myPosition])
 
   const [loading, setLoading] = useState(true)
   const [blockTipHeight, setBlockTipHeight] = useState<number | null>(null)
@@ -39,6 +77,7 @@ function App() {
 
   const geohashPosition = useMemo(() => {
     if (!blockHash) return
+    if (!myPosition) return
     return geohash(blockHash, myPosition)
   }, [blockHash, myPosition])
 
@@ -46,7 +85,7 @@ function App() {
     if (!geohashPosition) return
 
     return (
-      <Marker position={geohashPosition as LatLngExpression}>
+      <Marker position={geohashPosition as LatLngTuple}>
         <Popup>{blockHash}</Popup>
       </Marker>
     )
@@ -99,7 +138,7 @@ function App() {
   useEffect(() => {
     if (BLOCKHEIGHT_TO_HASH_MAP[blockHeight]) {
       setBlockHash(BLOCKHEIGHT_TO_HASH_MAP[blockHeight])
-      return 
+      return
     }
 
     const abortCtrl = new AbortController()
@@ -126,27 +165,22 @@ function App() {
         <img alt="Fork me on GitHub" title="Fork me on GitHub" src="fork_me.png" id="forkme" />
       </a>
       <div className="App">
-
         <header className="App-container" style={{ backgroundColor: 'rgba(0, 0, 0, 0.33)' }}>
           <h1>Bitcoin Places</h1>
           <div>
             <ul className="m-0 p-0 unstyled vertical">
               <li>
-                <button onClick={onClickCurrent}>
-                  Current {blockTipHeight}
-                </button>
+                <button onClick={onClickCurrent}>Current {blockTipHeight}</button>
               </li>
               <li>
-                <button onClick={onClickToday}>
-                  Today {blockHeightOfTheDay}
-                </button>
+                <button onClick={onClickToday}>Today {blockHeightOfTheDay}</button>
               </li>
               <li>
-                <button onClick={onClickWeek}>
-                  Week {blockHeightOfTheWeek}
-                </button>
+                <button onClick={onClickWeek}>Week {blockHeightOfTheWeek}</button>
               </li>
-              <li><button onClick={() => setBlockHeight(0)}>Genesis 0</button></li>
+              <li>
+                <button onClick={() => setBlockHeight(0)}>Genesis 0</button>
+              </li>
             </ul>
           </div>
           <div className="mt-1">Current Height: {blockTipHeight}</div>
