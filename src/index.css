@@ -87,3 +87,7 @@ ul.unstyled {
 ul.vertical li {
   float: left;
 }
+
+.text-small {
+  font-size: small;
+}

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { MapContainer, Marker, Popup, ScaleControl, TileLayer, useMap, ZoomControl } from 'react-leaflet'
+import { MapContainer, Marker, Popup, Rectangle, ScaleControl, TileLayer, useMap, ZoomControl } from 'react-leaflet'
 import { MinimapControl } from './Minimap'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-import { ControlPosition } from 'leaflet'
+import { ControlPosition, LatLngBoundsExpression } from 'leaflet'
 import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwError } from './utils'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -47,6 +47,21 @@ function App() {
   )
   const [myPosition, setMyPosition] = useState<LatLng | undefined>(undefined)
 
+  const rectangleBounds = useMemo(() => {
+    if (!myPosition) return
+
+    return [
+      [Math.floor(myPosition[0]), Math.floor(myPosition[1])],
+      [Math.floor(myPosition[0]) + 1, Math.floor(myPosition[1]) + 1],
+    ] as LatLngBoundsExpression
+  }, [myPosition])
+
+  const rectangle = useMemo(() => {
+    if (!rectangleBounds) return
+
+    return <Rectangle bounds={rectangleBounds} pathOptions={{ color: 'black' }} />
+  }, [rectangleBounds])
+
   useEffect(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -84,7 +99,9 @@ function App() {
 
     return (
       <Marker position={myPosition}>
-        <Popup>You</Popup>
+        <Popup>
+          You ({myPosition[0]}, {myPosition[1]})
+        </Popup>
       </Marker>
     )
   }, [myPosition])
@@ -185,7 +202,10 @@ function App() {
       </a>
       <div className="App">
         <header className="App-container" style={{ backgroundColor: 'rgba(0, 0, 0, 0.33)' }}>
-          <h1>Bitcoin Places</h1>
+          <h1>
+            Bitcoin Places
+            <div className="mt-1 text-small">Most recent block height: {blockTipHeight}</div>
+          </h1>
           <div>
             <ul className="m-0 p-0 unstyled vertical">
               <li>
@@ -202,8 +222,8 @@ function App() {
               </li>
             </ul>
           </div>
-          <div className="mt-1">Current Height: {blockTipHeight}</div>
           <div className="mt-1">{blockHash}</div>
+          <div className="mt-1 d-none">Bounds: {JSON.stringify(rectangleBounds, null, 2)}</div>
         </header>
 
         <div style={{ width: '100vw', height: `100vh`, position: 'absolute', left: 0, top: 0, zIndex: -1 }}>
@@ -223,6 +243,7 @@ function App() {
             />
             {myPositionMarker}
             {geohashPositionMarker}
+            {rectangle}
             <PanToMapCenter center={geohashPosition} />
           </MapContainer>
         </div>
