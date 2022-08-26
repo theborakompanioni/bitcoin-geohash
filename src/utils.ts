@@ -72,7 +72,10 @@ export const geohash = (blockHash: Base16, position: LatLng): LatLng => {
   const lngIntPart = intPart(position[1])
   const lngFractPart = base16ToBase10(lngHashFractPart).substring(0, 6)
 
-  const lng = +`${lngIntPart}.${lngFractPart}`
+  // `lngIntPart` can be negative zero (-0) which string will undo
+  // (`(-1).toString() === "0"`) and because `-0 === 0` one must use
+  // `Object.is` as `Object.is(-0, 0) === false`
+  const lng = +`${lngIntPart}.${lngFractPart}` * (Object.is(lngIntPart, -0) ? -1 : 1)
   return [lat, lng]
 }
 
