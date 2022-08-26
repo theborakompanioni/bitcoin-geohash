@@ -3,12 +3,15 @@ import { MapContainer, Marker, Popup, ScaleControl, TileLayer, useMap, ZoomContr
 import { MinimapControl } from './Minimap'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-import { ControlPosition, LatLngExpression, LatLngTuple } from 'leaflet'
+import { ControlPosition } from 'leaflet'
 import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwError } from './utils'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
-const DEFAULT_LOCATION: LatLng = [30.375115, -97.687444]
+const AUSTIN: LatLng = [30.375115, -97.687444]
+const DEFAULT_LOCATION = AUSTIN
+const DEFAULT_CENTER = AUSTIN
+const DEFAULT_ZOOM = 9 // should cover every block in your view
 
 const BLOCKS_PER_DAY = 6 * 24
 const BLOCKS_PER_WEEK = BLOCKS_PER_DAY * 7
@@ -22,8 +25,23 @@ function Minimap({ position }: { position: ControlPosition }) {
   return <MinimapControl parentMap={map} position={position} zoom={1} />
 }
 
+function PanToMapCenter({ center }: { center?: LatLng }) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (!center) return
+
+    map.setView(center, map.getZoom(), {
+      animate: true,
+      duration: 1,
+    })
+  }, [map, center])
+
+  return <></>
+}
+
 function App() {
-  const [browserCurrentPosition, setBrowserCurrentPosition] = useState<LatLng | undefined>(undefined)
+  const [browserCurrentPosition, setBrowserCurrentPosition] = useState<GeolocationPosition | undefined>(undefined)
   const [browserCurrentPositionError, setBrowserCurrentPositionError] = useState<GeolocationPositionError | undefined>(
     undefined
   )
@@ -34,7 +52,7 @@ function App() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.debug(position)
-          setBrowserCurrentPosition([position.coords.latitude, position.coords.longitude] as LatLng)
+          setBrowserCurrentPosition(position)
           setBrowserCurrentPositionError(undefined)
         },
         (e) => {
@@ -54,7 +72,8 @@ function App() {
   useEffect(() => {
     console.log('aaaa')
     if (browserCurrentPosition) {
-      setMyPosition(browserCurrentPosition)
+      const latLng: LatLng = [browserCurrentPosition.coords.latitude, browserCurrentPosition.coords.longitude]
+      setMyPosition(latLng)
     } else if (browserCurrentPositionError) {
       setMyPosition(DEFAULT_LOCATION)
     }
@@ -85,8 +104,8 @@ function App() {
     if (!geohashPosition) return
 
     return (
-      <Marker position={geohashPosition as LatLngTuple}>
-        <Popup>{blockHash}</Popup>
+      <Marker position={geohashPosition}>
+        <Popup autoClose={false}>{blockHash}</Popup>
       </Marker>
     )
   }, [blockHash, geohashPosition])
@@ -190,8 +209,8 @@ function App() {
         <div style={{ width: '100vw', height: `100vh`, position: 'absolute', left: 0, top: 0, zIndex: -1 }}>
           <MapContainer
             style={{ width: '100%', height: '100%' }}
-            center={[30.375115, -97.687444]}
-            zoom={10}
+            center={DEFAULT_CENTER}
+            zoom={DEFAULT_ZOOM}
             scrollWheelZoom={true}
             zoomControl={false}
           >
@@ -204,6 +223,7 @@ function App() {
             />
             {myPositionMarker}
             {geohashPositionMarker}
+            <PanToMapCenter center={geohashPosition} />
           </MapContainer>
         </div>
       </div>
