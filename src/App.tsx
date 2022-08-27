@@ -13,13 +13,7 @@ import {
 import { MinimapControl } from './Minimap'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-import {
-  ControlPosition,
-  LatLngBoundsExpression,
-  LatLngExpression,
-  LeafletMouseEvent,
-  Marker as LeafletMarker,
-} from 'leaflet'
+import { ControlPosition, LatLngExpression, LeafletMouseEvent, Marker as LeafletMarker } from 'leaflet'
 import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwError } from './utils'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -55,7 +49,7 @@ function DraggableMarker({ position, onDragEnd, children }: PropsWithChildren<Dr
         }
       },
     }),
-    []
+    [onDragEnd]
   )
 
   return (
@@ -155,20 +149,32 @@ function App() {
     console.info(msg)
   }, [myPosition])
 
-  const rectangleBounds = useMemo(() => {
+  const rectangles = useMemo(() => {
     if (!myPosition) return
 
-    return [
-      [Math.floor(myPosition[0]), Math.floor(myPosition[1])],
-      [Math.floor(myPosition[0]) + 1, Math.floor(myPosition[1]) + 1],
-    ] as LatLngBoundsExpression
+    const rects = []
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        const isActive = i === 0 && j === 0
+        const pathOptions = {
+          color: isActive ? 'green' : 'black',
+          opacity: isActive ? 1 : 0.1,
+          fillOpacity: 0.1,
+        }
+        rects.push(
+          <Rectangle
+            key={`${i}-${j}`}
+            bounds={[
+              [Math.floor(myPosition[0]) - i, Math.floor(myPosition[1]) - j],
+              [Math.floor(myPosition[0]) - i + 1, Math.floor(myPosition[1]) - j + 1],
+            ]}
+            pathOptions={pathOptions}
+          />
+        )
+      }
+    }
+    return rects
   }, [myPosition])
-
-  const rectangle = useMemo(() => {
-    if (!rectangleBounds) return
-
-    return <Rectangle bounds={rectangleBounds} pathOptions={{ color: 'black' }} />
-  }, [rectangleBounds])
 
   const [loading, setLoading] = useState(true)
   const [blockTipHeight, setBlockTipHeight] = useState<number | null>(null)
@@ -289,7 +295,7 @@ function App() {
             </ul>
           </div>
           <div className="mt-1">{blockHash}</div>
-          <div className="mt-1 d-none">Bounds: {JSON.stringify(rectangleBounds, null, 2)}</div>
+          <div className="mt-1 d-none">My Position: {JSON.stringify(myPosition, null, 2)}</div>
         </header>
 
         <div style={{ width: '100vw', height: `100vh`, position: 'absolute', left: 0, top: 0, zIndex: -1 }}>
@@ -307,7 +313,6 @@ function App() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url={TILE_URL}
             />
-            {rectangle}
             {geohashPositionMarker}
             {myPositionMarker}
 
@@ -318,6 +323,7 @@ function App() {
                 setMyPosition([latLng.lat, latLng.lng])
               }}
             />
+            {rectangles}
           </MapContainer>
         </div>
       </div>
