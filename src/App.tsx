@@ -133,13 +133,19 @@ function App() {
   }, [myPosition])
 
   useEffect(() => {
-    if (browserCurrentPosition) {
-      const latLng: LatLng = [browserCurrentPosition.coords.latitude, browserCurrentPosition.coords.longitude]
-      setMyPosition(latLng)
-    } else if (browserCurrentPositionError) {
+    if (!browserCurrentPosition) return
+
+    const latLng: LatLng = [browserCurrentPosition.coords.latitude, browserCurrentPosition.coords.longitude]
+    setMyPosition(latLng)
+  }, [browserCurrentPosition])
+
+  useEffect(() => {
+    if (myPosition) return
+
+    if (browserCurrentPositionError) {
       setMyPosition(DEFAULT_LOCATION)
     }
-  }, [browserCurrentPosition, browserCurrentPositionError])
+  }, [myPosition, browserCurrentPositionError])
 
   useEffect(() => {
     if (!myPosition) return

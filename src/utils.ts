@@ -56,7 +56,6 @@ export const convertBaseBigInt = (() => {
 
 export const base16ToBase10 = (base16: Base16): Base10 => convertBaseBigInt(base16, 16, 10)
 
-
 const buildNumber = (intPart: number, fractPart: string) => {
   // `intPart` can be negative zero (-0) which string will undo
   // (`(-1).toString() === "0"`) and because `-0 === 0` one must use
