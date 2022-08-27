@@ -226,12 +226,16 @@ function App() {
     setBlockHeight(blockHeightOfTheWeek)
   }, [blockHeightOfTheWeek])
 
+  const onClickGenesis = useCallback(() => {
+    setBlockHeight(0)
+  }, [])
+
   useEffect(() => {
     const abortCtrl = new AbortController()
 
     setLoading(true)
     fetchBlockTipHeight({ signal: abortCtrl.signal })
-      .then((val) => new Promise<Response>((resolve) => setTimeout(() => resolve(val), 1_000)))
+      .then((val) => new Promise<Response>((resolve) => setTimeout(() => resolve(val), 250)))
       .then((res) => (res.ok ? res.text() : throwError('')))
       .then((data) => {
         if (abortCtrl.signal.aborted) return
@@ -253,8 +257,10 @@ function App() {
 
     const abortCtrl = new AbortController()
     const height = blockHeight
+
+    setLoading(true)
     fetchBlockHashByHeight(height, { signal: abortCtrl.signal })
-      .then((val) => new Promise<Response>((resolve) => setTimeout(() => resolve(val), 1_000)))
+      .then((val) => new Promise<Response>((resolve) => setTimeout(() => resolve(val), 250)))
       .then((res) => (res.ok ? res.text() : throwError('')))
       .then((hash) => {
         if (abortCtrl.signal.aborted) return
@@ -283,16 +289,24 @@ function App() {
           <div>
             <ul className="m-0 p-0 unstyled vertical">
               <li>
-                <button onClick={onClickCurrent}>Current {blockTipHeight}</button>
+                <button onClick={onClickCurrent} disabled={loading}>
+                  Current {blockTipHeight}
+                </button>
               </li>
               <li>
-                <button onClick={onClickToday}>Today {blockHeightOfTheDay}</button>
+                <button onClick={onClickToday} disabled={loading}>
+                  Today {blockHeightOfTheDay}
+                </button>
               </li>
               <li>
-                <button onClick={onClickWeek}>Week {blockHeightOfTheWeek}</button>
+                <button onClick={onClickWeek} disabled={loading}>
+                  Week {blockHeightOfTheWeek}
+                </button>
               </li>
               <li>
-                <button onClick={() => setBlockHeight(0)}>Genesis 0</button>
+                <button onClick={onClickGenesis} disabled={loading}>
+                  Genesis 0
+                </button>
               </li>
             </ul>
           </div>
