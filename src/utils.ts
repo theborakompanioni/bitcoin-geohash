@@ -56,6 +56,14 @@ export const convertBaseBigInt = (() => {
 
 export const base16ToBase10 = (base16: Base16): Base10 => convertBaseBigInt(base16, 16, 10)
 
+
+const buildNumber = (intPart: number, fractPart: string) => {
+  // `intPart` can be negative zero (-0) which string will undo
+  // (`(-1).toString() === "0"`) and because `-0 === 0` one must use
+  // `Object.is` as `Object.is(-0, 0) === false`
+  return +`${intPart}.${fractPart}` * (Object.is(intPart, -0) ? -1 : 1)
+}
+
 export const geohash = (blockHash: Base16, position: LatLng): LatLng => {
   const hashBase = blockHash.substring(32, 64)
   const latHashFractPart = hashBase.substring(0, 16)
@@ -63,15 +71,11 @@ export const geohash = (blockHash: Base16, position: LatLng): LatLng => {
 
   const latIntPart = Math.trunc(position[0])
   const latFractPart = base16ToBase10(latHashFractPart).substring(0, 6)
-  const lat = +`${latIntPart}.${latFractPart}`
+  const lat = buildNumber(latIntPart, latFractPart)
 
   const lngIntPart = Math.trunc(position[1])
   const lngFractPart = base16ToBase10(lngHashFractPart).substring(0, 6)
-
-  // `lngIntPart` can be negative zero (-0) which string will undo
-  // (`(-1).toString() === "0"`) and because `-0 === 0` one must use
-  // `Object.is` as `Object.is(-0, 0) === false`
-  const lng = +`${lngIntPart}.${lngFractPart}` * (Object.is(lngIntPart, -0) ? -1 : 1)
+  const lng = buildNumber(lngIntPart, lngFractPart)
   return [lat, lng]
 }
 
