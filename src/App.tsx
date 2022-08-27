@@ -65,8 +65,7 @@ function PanToMapCenter({ center }: { center?: LatLng }) {
   useEffect(() => {
     if (!center) return
 
-    const zoom = Math.max(map.getZoom(), DEFAULT_ZOOM - 4)
-    map.setView(center, zoom, {
+    map.setView(center, map.getZoom(), {
       animate: true,
       duration: 1,
     })
