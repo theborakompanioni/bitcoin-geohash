@@ -183,6 +183,16 @@ function App() {
   const [blockHeight, setBlockHeight] = useState(0)
   const [blockHash, setBlockHash] = useState<string | null>(null)
 
+  const [blockHeightInput, setBlockHeightInput] = useState(blockHeight)
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setBlockHeight(blockHeightInput)
+    }, 1_000)
+
+    return () => clearTimeout(timerId)
+  }, [blockHeightInput])
+
   const geohashPosition = useMemo(() => {
     if (!blockHash) return
     if (!myPosition) return
@@ -213,21 +223,21 @@ function App() {
 
   const onClickCurrent = useCallback(() => {
     if (blockTipHeight === null) return
-    setBlockHeight(blockTipHeight)
+    setBlockHeightInput(blockTipHeight)
   }, [blockTipHeight])
 
   const onClickToday = useCallback(() => {
     if (blockHeightOfTheDay === null) return
-    setBlockHeight(blockHeightOfTheDay)
+    setBlockHeightInput(blockHeightOfTheDay)
   }, [blockHeightOfTheDay])
 
   const onClickWeek = useCallback(() => {
     if (blockHeightOfTheWeek === null) return
-    setBlockHeight(blockHeightOfTheWeek)
+    setBlockHeightInput(blockHeightOfTheWeek)
   }, [blockHeightOfTheWeek])
 
   const onClickGenesis = useCallback(() => {
-    setBlockHeight(0)
+    setBlockHeightInput(0)
   }, [])
 
   useEffect(() => {
@@ -309,6 +319,23 @@ function App() {
                 </button>
               </li>
             </ul>
+          </div>
+          <div className="mt-1">
+            <input
+              name="blockHeightInput"
+              type="number"
+              step={1}
+              min={0}
+              max={blockTipHeight || 0}
+              value={blockHeightInput}
+              onChange={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+
+                if (loading) return
+                setBlockHeightInput(parseInt(e.target.value, 10))
+              }}
+            />
           </div>
           <div className="mt-1">{blockHash}</div>
           <div className="mt-1 d-none">My Position: {JSON.stringify(myPosition, null, 2)}</div>
