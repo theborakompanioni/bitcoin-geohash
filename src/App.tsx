@@ -154,8 +154,11 @@ function App() {
     console.info(msg)
   }, [myPosition])
 
-  const rectangles = useMemo(() => {
-    if (!myPosition) return
+  const rectangleOptions = useMemo(() => {
+    if (!myPosition) return []
+
+    const x = Math.floor(myPosition[0])
+    const y = Math.floor(myPosition[1])
 
     const rects = []
     for (let i = -1; i <= 1; i++) {
@@ -166,16 +169,10 @@ function App() {
           opacity: isActive ? 1 : 0.1,
           fillOpacity: 0.1,
         }
-        rects.push(
-          <Rectangle
-            key={`${i}-${j}`}
-            bounds={[
-              [Math.floor(myPosition[0]) - i, Math.floor(myPosition[1]) - j],
-              [Math.floor(myPosition[0]) - i + 1, Math.floor(myPosition[1]) - j + 1],
-            ]}
-            pathOptions={pathOptions}
-          />
-        )
+        rects.push({
+          bounds: [[x - i, y - j] as LatLng, [x - i + 1, y - j + 1] as LatLng],
+          pathOptions,
+        })
       }
     }
     return rects
@@ -328,7 +325,9 @@ function App() {
                 setMyPosition([latLng.lat, latLng.lng])
               }}
             />
-            {rectangles}
+            {rectangleOptions.map((options, index) => {
+              return <Rectangle key={index} bounds={options.bounds} pathOptions={options.pathOptions} />
+            })}
           </MapContainer>
         </div>
       </div>
