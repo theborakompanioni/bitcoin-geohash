@@ -1,9 +1,25 @@
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { MapContainer, Marker, Popup, Rectangle, ScaleControl, TileLayer, useMap, ZoomControl } from 'react-leaflet'
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  Rectangle,
+  ScaleControl,
+  TileLayer,
+  useMap,
+  useMapEvents,
+  ZoomControl,
+} from 'react-leaflet'
 import { MinimapControl } from './Minimap'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-import { ControlPosition, LatLngBoundsExpression, LatLngExpression, Marker as LeafletMarker } from 'leaflet'
+import {
+  ControlPosition,
+  LatLngBoundsExpression,
+  LatLngExpression,
+  LeafletMouseEvent,
+  Marker as LeafletMarker,
+} from 'leaflet'
 import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwError } from './utils'
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -61,6 +77,16 @@ function PanToMapCenter({ center }: { center?: LatLng }) {
       duration: 1,
     })
   }, [map, center])
+
+  return <></>
+}
+
+function MapOnClick({ onClick }: { onClick: (e: LeafletMouseEvent) => void }) {
+  useMapEvents({
+    click: (e) => {
+      onClick(e)
+    },
+  })
 
   return <></>
 }
@@ -286,6 +312,12 @@ function App() {
             {myPositionMarker}
 
             <PanToMapCenter center={geohashPosition} />
+            <MapOnClick
+              onClick={(e) => {
+                const latLng = e.latlng
+                setMyPosition([latLng.lat, latLng.lng])
+              }}
+            />
           </MapContainer>
         </div>
       </div>
