@@ -78,3 +78,8 @@ export function MinimapControl({
     </div>
   )
 }
+
+export default function Minimap({ position }: { position: ControlPosition }) {
+  const map = useMap()
+  return <MinimapControl parentMap={map} position={position} zoom={1} />
+}

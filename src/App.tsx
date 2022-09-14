@@ -1,87 +1,26 @@
-import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
-  MapContainer,
   Marker,
   Popup,
   Rectangle,
-  ScaleControl,
-  TileLayer,
-  useMap,
-  useMapEvents,
-  ZoomControl,
 } from 'react-leaflet'
-import { MinimapControl } from './Minimap'
-import 'leaflet/dist/leaflet.css'
-import './App.css'
-import { ControlPosition, LatLngExpression, LeafletMouseEvent, Marker as LeafletMarker } from 'leaflet'
+import Map, { PanToMapCenter, MapOnClick } from './map/Map'
+import Minimap from './map/Minimap'
+import DraggableMarker from './map/DraggableMarker'
+
 import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwError } from './utils'
 
-const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+import 'leaflet/dist/leaflet.css'
+import './App.css'
 
 const AUSTIN: LatLng = [30.375115, -97.687444]
 const DEFAULT_LOCATION = AUSTIN
-const DEFAULT_CENTER = AUSTIN
-const DEFAULT_ZOOM = 9 // should cover every block in your view
 
 const BLOCKS_PER_DAY = 6 * 24
 const BLOCKS_PER_WEEK = BLOCKS_PER_DAY * 7
 
 const BLOCKHEIGHT_TO_HASH_MAP: { [key: number]: string } = {
   0: '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f',
-}
-
-function Minimap({ position }: { position: ControlPosition }) {
-  const map = useMap()
-  return <MinimapControl parentMap={map} position={position} zoom={1} />
-}
-
-interface DraggableMarkerProps {
-  position: LatLngExpression
-  onDragEnd: (marker: LeafletMarker) => void
-}
-function DraggableMarker({ position, onDragEnd, children }: PropsWithChildren<DraggableMarkerProps>) {
-  const markerRef = useRef<LeafletMarker>(null)
-  const eventHandlers = useMemo(
-    () => ({
-      dragend: () => {
-        if (markerRef.current) {
-          onDragEnd(markerRef.current)
-        }
-      },
-    }),
-    [onDragEnd]
-  )
-
-  return (
-    <Marker draggable={true} eventHandlers={eventHandlers} position={position} ref={markerRef}>
-      {children}
-    </Marker>
-  )
-}
-
-function PanToMapCenter({ center }: { center?: LatLng }) {
-  const map = useMap()
-
-  useEffect(() => {
-    if (!center) return
-
-    map.setView(center, map.getZoom(), {
-      animate: true,
-      duration: 1,
-    })
-  }, [map, center])
-
-  return <></>
-}
-
-function MapOnClick({ onClick }: { onClick: (e: LeafletMouseEvent) => void }) {
-  useMapEvents({
-    click: (e) => {
-      onClick(e)
-    },
-  })
-
-  return <></>
 }
 
 function App() {
@@ -342,34 +281,24 @@ function App() {
         </header>
 
         <div style={{ width: '100vw', height: `100vh`, position: 'absolute', left: 0, top: 0, zIndex: -1 }}>
-          <MapContainer
-            style={{ width: '100%', height: '100%' }}
-            center={DEFAULT_CENTER}
-            zoom={DEFAULT_ZOOM}
-            scrollWheelZoom={true}
-            zoomControl={false}
-          >
-            <ZoomControl position="bottomleft" />
+          <Map>
+            <>
             <Minimap position="bottomright" />
-            <ScaleControl position="topleft" />
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url={TILE_URL}
-            />
-            {geohashPositionMarker}
-            {myPositionMarker}
+              {geohashPositionMarker}
+              {myPositionMarker}
 
-            <PanToMapCenter center={geohashPosition} />
-            <MapOnClick
-              onClick={(e) => {
-                const latLng = e.latlng
-                setMyPosition([latLng.lat, latLng.lng])
-              }}
-            />
-            {rectangleOptions.map((options, index) => {
-              return <Rectangle key={index} bounds={options.bounds} pathOptions={options.pathOptions} />
-            })}
-          </MapContainer>
+              <PanToMapCenter center={geohashPosition} />
+              <MapOnClick
+                onClick={(e) => {
+                  const latLng = e.latlng
+                  setMyPosition([latLng.lat, latLng.lng])
+                }}
+              />
+              {rectangleOptions.map((options, index) => {
+                return <Rectangle key={index} bounds={options.bounds} pathOptions={options.pathOptions} />
+              })}
+            </>
+          </Map>
         </div>
       </div>
     </>
