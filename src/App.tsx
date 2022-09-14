@@ -12,6 +12,7 @@ import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwErro
 
 import 'leaflet/dist/leaflet.css'
 import './App.css'
+import useNavigatorGeolocation from './hooks/useNavigatorGeolocation'
 
 const AUSTIN: LatLng = [30.375115, -97.687444]
 const DEFAULT_LOCATION = AUSTIN
@@ -24,33 +25,7 @@ const BLOCKHEIGHT_TO_HASH_MAP: { [key: number]: string } = {
 }
 
 function App() {
-  const [browserCurrentPosition, setBrowserCurrentPosition] = useState<GeolocationPosition | undefined>(undefined)
-  const [browserCurrentPositionError, setBrowserCurrentPositionError] = useState<GeolocationPositionError | undefined>(
-    undefined
-  )
-
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.debug(position)
-          setBrowserCurrentPosition(position)
-          setBrowserCurrentPositionError(undefined)
-        },
-        (e) => {
-          setBrowserCurrentPosition(undefined)
-          setBrowserCurrentPositionError(e)
-
-          const msg = [
-            "User did not allow sharing his location. That's totally fine!",
-            'Watch your privacy man! You can input it manually.',
-          ].join('\n')
-          console.debug(msg)
-        }
-      )
-    }
-  }, [])
-
+  const { browserCurrentPositionError, browserCurrentPosition } = useNavigatorGeolocation()
   const [myPosition, setMyPosition] = useState<LatLng | undefined>(undefined)
 
   const myPositionMarker = useMemo(() => {
