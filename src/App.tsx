@@ -1,18 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  Marker,
-  Popup,
-  Rectangle,
-} from 'react-leaflet'
-import Map, { PanToMapCenter, MapOnClick } from './map/Map'
-import Minimap from './map/Minimap'
-import DraggableMarker from './map/DraggableMarker'
 
+import MainMap from './MainMap'
+import useNavigatorGeolocation from './hooks/useNavigatorGeolocation'
 import { fetchBlockHashByHeight, fetchBlockTipHeight, geohash, LatLng, throwError } from './utils'
 
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-import useNavigatorGeolocation from './hooks/useNavigatorGeolocation'
 
 const AUSTIN: LatLng = [30.375115, -97.687444]
 const DEFAULT_LOCATION = AUSTIN
@@ -27,24 +20,6 @@ const BLOCKHEIGHT_TO_HASH_MAP: { [key: number]: string } = {
 function App() {
   const { browserCurrentPositionError, browserCurrentPosition } = useNavigatorGeolocation()
   const [myPosition, setMyPosition] = useState<LatLng | undefined>(undefined)
-
-  const myPositionMarker = useMemo(() => {
-    if (!myPosition) return
-
-    return (
-      <DraggableMarker
-        position={myPosition}
-        onDragEnd={(marker) => {
-          const latLng = marker.getLatLng()
-          setMyPosition([latLng.lat, latLng.lng])
-        }}
-      >
-        <Popup>
-          You ({myPosition[0]}, {myPosition[1]})
-        </Popup>
-      </DraggableMarker>
-    )
-  }, [myPosition])
 
   useEffect(() => {
     if (!browserCurrentPosition) return
@@ -68,30 +43,6 @@ function App() {
     console.info(msg)
   }, [myPosition])
 
-  const rectangleOptions = useMemo(() => {
-    if (!myPosition) return []
-
-    const x = Math.floor(myPosition[0])
-    const y = Math.floor(myPosition[1])
-
-    const rects = []
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        const isActive = i === 0 && j === 0
-        const pathOptions = {
-          color: isActive ? 'green' : 'black',
-          opacity: isActive ? 1 : 0.1,
-          fillOpacity: 0.1,
-        }
-        rects.push({
-          bounds: [[x - i, y - j] as LatLng, [x - i + 1, y - j + 1] as LatLng],
-          pathOptions,
-        })
-      }
-    }
-    return rects
-  }, [myPosition])
-
   const [loading, setLoading] = useState(true)
   const [blockTipHeight, setBlockTipHeight] = useState<number | null>(null)
   const [blockHeight, setBlockHeight] = useState(0)
@@ -107,23 +58,11 @@ function App() {
     return () => clearTimeout(timerId)
   }, [blockHeightInput])
 
-  const geohashPosition = useMemo(() => {
+  const blockPosition = useMemo(() => {
     if (!blockHash) return
     if (!myPosition) return
     return geohash(blockHash, myPosition)
   }, [blockHash, myPosition])
-
-  const geohashPositionMarker = useMemo(() => {
-    if (!geohashPosition) return
-
-    return (
-      <Marker position={geohashPosition}>
-        <Popup>
-          {blockHash} ({geohashPosition[0]}, {geohashPosition[1]})
-        </Popup>
-      </Marker>
-    )
-  }, [blockHash, geohashPosition])
 
   const blockHeightOfTheDay = useMemo(() => {
     if (blockTipHeight === null) return null
@@ -256,24 +195,12 @@ function App() {
         </header>
 
         <div style={{ width: '100vw', height: `100vh`, position: 'absolute', left: 0, top: 0, zIndex: -1 }}>
-          <Map>
-            <>
-            <Minimap position="bottomright" />
-              {geohashPositionMarker}
-              {myPositionMarker}
-
-              <PanToMapCenter center={geohashPosition} />
-              <MapOnClick
-                onClick={(e) => {
-                  const latLng = e.latlng
-                  setMyPosition([latLng.lat, latLng.lng])
-                }}
-              />
-              {rectangleOptions.map((options, index) => {
-                return <Rectangle key={index} bounds={options.bounds} pathOptions={options.pathOptions} />
-              })}
-            </>
-          </Map>
+          <MainMap
+            blockHash={blockHash}
+            blockPosition={blockPosition}
+            referencePosition={myPosition}
+            onReferencePositionUpdate={(pos) => setMyPosition(pos)}
+          />
         </div>
       </div>
     </>

@@ -7,8 +7,7 @@ export interface NavigatorGeolocationInfo {
   isPermissionDenied?: boolean
 }
 
-export default function useNavigatorGeolocation(): NavigatorGeolocationInfo  {
-
+export default function useNavigatorGeolocation(): NavigatorGeolocationInfo {
   const [browserCurrentPosition, setBrowserCurrentPosition] = useState<GeolocationPosition | undefined>(undefined)
   const [browserCurrentPositionError, setBrowserCurrentPositionError] = useState<GeolocationPositionError | undefined>(
     undefined
@@ -21,7 +20,7 @@ export default function useNavigatorGeolocation(): NavigatorGeolocationInfo  {
       browserCurrentPositionError,
       browserCurrentPosition,
       browserLastKnownPosition,
-      isPermissionDenied
+      isPermissionDenied,
     }
   }, [browserCurrentPositionError, browserCurrentPosition, browserLastKnownPosition, isPermissionDenied])
 
@@ -41,14 +40,15 @@ export default function useNavigatorGeolocation(): NavigatorGeolocationInfo  {
           const isPermissionDenied = e.code === GeolocationPositionError.PERMISSION_DENIED
           setIsPermissionDenied(isPermissionDenied)
 
-          const msg = (isPermissionDenied ? [
-            "User did not allow sharing his location. That's totally fine!",
-            'Watch your privacy man! You can input it manually.',
-            e.message
-          ] : [
-            'Could not aquire location: ',
-            e.message
-          ]).join('\n')
+          const msg = (
+            isPermissionDenied
+              ? [
+                  "User did not allow sharing his location. That's totally fine!",
+                  'Watch your privacy man! You can input it manually.',
+                  e.message,
+                ]
+              : ['Could not aquire location: ', e.message]
+          ).join('\n')
 
           console.debug(msg)
         }

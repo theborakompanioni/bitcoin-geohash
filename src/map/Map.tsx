@@ -1,12 +1,5 @@
 import React, { PropsWithChildren, useEffect } from 'react'
-import {
-  MapContainer,
-  ScaleControl,
-  TileLayer,
-  useMap,
-  useMapEvents,
-  ZoomControl,
-} from 'react-leaflet'
+import { MapContainer, ScaleControl, TileLayer, useMap, useMapEvents, ZoomControl } from 'react-leaflet'
 import { LeafletMouseEvent } from 'leaflet'
 import { LatLng } from './../utils'
 
@@ -42,20 +35,21 @@ export function MapOnClick({ onClick }: { onClick: (e: LeafletMouseEvent) => voi
 }
 
 export default function Map(props: PropsWithChildren<any>) {
-  return (<MapContainer
-            style={{ width: '100%', height: '100%' }}
-            center={DEFAULT_CENTER}
-            zoom={DEFAULT_ZOOM}
-            scrollWheelZoom={true}
-            zoomControl={false}
-          >
-            <ZoomControl position="bottomleft" />
-            <ScaleControl position="topleft" />
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url={TILE_URL}
-            />
-            {props.children}
-          </MapContainer>
+  return (
+    <MapContainer
+      style={{ width: '100%', height: '100%' }}
+      center={DEFAULT_CENTER}
+      zoom={DEFAULT_ZOOM}
+      scrollWheelZoom={true}
+      zoomControl={false}
+    >
+      <ZoomControl position="bottomleft" />
+      <ScaleControl position="topleft" />
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url={TILE_URL}
+      />
+      {props.children}
+    </MapContainer>
   )
 }
