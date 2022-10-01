@@ -53,5 +53,10 @@
     "printWidth": 120,
     "semi": false,
     "singleQuote": true
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "react-leaflet": "<rootDir>/src/mocks/reactLeafletMock.js"
+    }
   }
 }
