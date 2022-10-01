@@ -154,9 +154,7 @@ function App() {
       </a>
       <div className="App">
         <header className="App-container" style={{ backgroundColor: 'rgba(0, 0, 0, 0.33)' }}>
-          <h1 className="App-heading">
-            Bitcoin GeoHash
-          </h1>
+          <h1 className="App-heading">Bitcoin GeoHash</h1>
           <div className="App-buttons-container">
             <ul className="m-0 p-0 unstyled vertical">
               <li>
