@@ -156,33 +156,32 @@ function App() {
         <header className="App-container" style={{ backgroundColor: 'rgba(0, 0, 0, 0.33)' }}>
           <h1 className="App-heading">
             Bitcoin Places
-            <div className="mt-1 text-small">Most recent block height: {blockTipHeight}</div>
           </h1>
-          <div>
+          <div className="App-buttons-container">
             <ul className="m-0 p-0 unstyled vertical">
               <li>
                 <button onClick={onClickCurrent} disabled={loading}>
-                  Current {blockTipHeight}
+                  Current #{blockTipHeight}
                 </button>
               </li>
               <li>
                 <button onClick={onClickToday} disabled={loading}>
-                  Today {blockHeightOfTheDay}
+                  Today #{blockHeightOfTheDay}
                 </button>
               </li>
               <li>
                 <button onClick={onClickWeek} disabled={loading}>
-                  Week {blockHeightOfTheWeek}
+                  Week #{blockHeightOfTheWeek}
                 </button>
               </li>
               <li>
                 <button onClick={onClickGenesis} disabled={loading}>
-                  Genesis 0
+                  Genesis #0
                 </button>
               </li>
             </ul>
           </div>
-          <div className="mt-1">
+          <div className="d-flex align-items-center mt-1">
             <input
               name="blockHeightInput"
               type="number"
@@ -203,7 +202,7 @@ function App() {
           {currentBlock && (
             <div className="mt-1">
               <span>Block #{currentBlock.height}: </span>
-              <span className=" word-break-all">{currentBlock.hash}</span>
+              <code className="word-break-all">{currentBlock.hash}</code>
             </div>
           )}
           <div className="mt-1 d-none">My Position: {JSON.stringify(myPosition, null, 2)}</div>

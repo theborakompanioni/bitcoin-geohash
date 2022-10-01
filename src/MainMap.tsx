@@ -31,7 +31,8 @@ export default function MainMap({
         }}
       >
         <Popup>
-          You ({referencePosition[0]}, {referencePosition[1]})
+          You<br />
+          ({referencePosition[0]}, {referencePosition[1]})
         </Popup>
       </DraggableMarker>
     )
@@ -68,7 +69,8 @@ export default function MainMap({
     return (
       <Marker position={blockPosition}>
         <Popup>
-          {blockHash} ({blockPosition[0]}, {blockPosition[1]})
+          {blockHash}<br /> 
+          ({blockPosition[0]}, {blockPosition[1]})
         </Popup>
       </Marker>
     )

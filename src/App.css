@@ -3,10 +3,7 @@ body {
 }
 
 h1 {
-  margin: 0 0 1rem 0;
-}
-h2 {
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
 }
 p {
   margin: 0.75rem 0 0.75rem 0;
@@ -34,9 +31,20 @@ hr {
   font-size: 21px;
 }
 
+@media only screen and (max-width: 576px) {
+  .App-buttons-container button {
+    margin: 0.125rem 0.125rem;
+    padding: 0.25rem 0.25rem;
+    font-size: x-small;
+  }
+}
+
+
 .App-link {
   color: #61dafb;
 }
+
+
 
 .main-map-container {
   width: 100vw;
