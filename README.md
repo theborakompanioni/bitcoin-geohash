@@ -1,10 +1,10 @@
 
 <p align="center">
-    <img src="https://github.com/theborakompanioni/bitcoin-places/raw/master/src/logo-dark.svg#gh-light-mode-only" alt="Logo" width="256" />
-    <img src="https://github.com/theborakompanioni/bitcoin-places/raw/master/src/logo-light.svg#gh-dark-mode-only" alt="Logo" width="256" />
+    <img src="https://github.com/theborakompanioni/bitcoin-geohash/raw/master/src/logo-dark.svg#gh-light-mode-only" alt="Logo" width="256" />
+    <img src="https://github.com/theborakompanioni/bitcoin-geohash/raw/master/src/logo-light.svg#gh-dark-mode-only" alt="Logo" width="256" />
 </p>
 
-Bitcoin Places
+Bitcoin GeoHash
 ===
 
 block hash: 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f

@@ -1,6 +1,6 @@
 {
-  "short_name": "Bitcoin Places",
-  "name": "Bitcoin Places",
+  "short_name": "Bitcoin GeoHash",
+  "name": "Bitcoin GeoHash",
   "icons": [
     {
       "src": "favicon.ico",

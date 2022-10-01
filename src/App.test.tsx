@@ -5,7 +5,7 @@ describe('<App />', () => {
   it('should render an App heading', () => {
     render(<App />)
 
-    const headingElement = screen.getByText('Bitcoin Places')
+    const headingElement = screen.getByText('Bitcoin GeoHash')
     expect(headingElement).toBeInTheDocument()
   })
 })
