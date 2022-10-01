@@ -7,6 +7,10 @@
 Bitcoin GeoHash
 ===
 
+Everyone knows that [Bitcoin Is Time](https://dergigi.com/time), but did you know that Bitcoin is a place too?
+Each block has a unique position, the next one is near you and just around the corner.
+
+<pre>
 block hash: 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
 [Take last 16 bytes:]
 4ff763ae46a2a6c172b3f1b60a8ce26f
@@ -16,6 +20,7 @@ To decimal: 0.576218..., 0.826521...
 Your location (example): 30.375115, -97.687444
 [Combine integer part of location with fractional part of hash:]
 Destination Coordinates: 30.576218, -97.826521
+</pre>
 
 ## License
 
