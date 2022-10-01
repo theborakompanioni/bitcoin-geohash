@@ -11,14 +11,13 @@ h2 {
 p {
   margin: 0.75rem 0 0.75rem 0;
 }
-
-.App {
-  text-align: center;
-}
-
 hr {
   width: 50vw;
   border: 1px solid #999;
+}
+
+.App {
+  text-align: center;
 }
 
 .App-container {
@@ -31,8 +30,21 @@ hr {
   padding: 1rem;
 }
 
+.App-heading {
+  font-size: 21px;
+}
+
 .App-link {
   color: #61dafb;
+}
+
+.main-map-container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
 }
 
 /* Leaflet adaptions */

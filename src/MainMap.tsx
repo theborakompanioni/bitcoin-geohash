@@ -7,7 +7,7 @@ import DraggableMarker from './map/DraggableMarker'
 import { LatLng } from './utils'
 
 interface MainMapProps {
-  blockHash: string | null
+  blockHash: string | undefined
   blockPosition: LatLng | undefined
   referencePosition: LatLng | undefined
   onReferencePositionUpdate: (pos: LatLng | undefined) => void
@@ -63,6 +63,7 @@ export default function MainMap({
 
   const blockPositionMarker = useMemo(() => {
     if (!blockPosition) return
+    if (!blockHash) return
 
     return (
       <Marker position={blockPosition}>

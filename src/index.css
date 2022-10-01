@@ -91,3 +91,7 @@ ul.vertical li {
 .text-small {
   font-size: small;
 }
+
+.word-break-all {
+  word-break: break-all;
+}
