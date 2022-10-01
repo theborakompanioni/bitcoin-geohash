@@ -179,7 +179,14 @@ function App() {
               </li>
             </ul>
           </div>
-          <div className="d-flex align-items-center mt-1">
+          <form
+            className="d-flex align-items-center mt-1"
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setBlockHeight(blockHeightInput)
+            }}
+          >
             <input
               name="blockHeightInput"
               type="number"
@@ -193,10 +200,10 @@ function App() {
                 setBlockHeightInput(parseInt(e.target.value, 10))
               }}
             />
-            <button ref={submitButtonRef} onClick={() => setBlockHeight(blockHeightInput)} disabled={loading}>
+            <button ref={submitButtonRef} disabled={loading}>
               Go
             </button>
-          </div>
+          </form>
           {currentBlock && (
             <div className="mt-1">
               <span>Block #{currentBlock.height}: </span>
