@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useMemo, useRef } from 'react'
+import { PropsWithChildren, useMemo, useRef } from 'react'
 import { Marker } from 'react-leaflet'
 import { LatLngExpression, Marker as LeafletMarker } from 'leaflet'
 

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Marker, Popup, Rectangle } from 'react-leaflet'
 import Map, { PanToMapCenter, MapOnClick } from './map/Map'
 import Minimap from './map/Minimap'

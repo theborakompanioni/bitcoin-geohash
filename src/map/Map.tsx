@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import { MapContainer, ScaleControl, TileLayer, useMap, useMapEvents, ZoomControl } from 'react-leaflet'
 import { LeafletMouseEvent } from 'leaflet'
 import { LatLng } from './../utils'
